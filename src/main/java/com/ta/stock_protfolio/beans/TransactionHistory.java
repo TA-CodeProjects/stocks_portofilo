@@ -3,10 +3,8 @@ package com.ta.stock_protfolio.beans;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -21,6 +19,8 @@ public class TransactionHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne
+    @ToString.Exclude
+    @JsonIgnore
     private UserStock userStock;
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;

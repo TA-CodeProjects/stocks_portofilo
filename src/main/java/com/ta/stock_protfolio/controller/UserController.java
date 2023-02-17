@@ -19,10 +19,14 @@ public class UserController {
 
     @PostMapping("transaction")
     @ResponseStatus(HttpStatus.CREATED)
-    public String makeTransaction(@RequestBody MakeTransaction makeTransaction) throws SystemException {
-        userService.makeTransaction(makeTransaction.getStockName(), makeTransaction.getAmount(), makeTransaction.getPrice()
+    public UserStock makeTransaction(@RequestBody MakeTransaction makeTransaction) throws SystemException {
+        return userService.makeTransaction(makeTransaction.getStockName(), makeTransaction.getAmount(), makeTransaction.getPrice()
                 , makeTransaction.getTransactionType(),makeTransaction.getDate());
-        return "Made transaction successfully";
+    }
+
+    @GetMapping("transaction/{userStockId}")
+    public List<TransactionHistory> getTransactionHistory(@PathVariable long userStockId) {
+        return userService.getTransactionHistory(userStockId);
     }
 
     @GetMapping
@@ -34,6 +38,7 @@ public class UserController {
     public UserStock getOneStock(@PathVariable long id) throws SystemException {
         return userService.getOneStock(id);
     }
+
 
 
 }

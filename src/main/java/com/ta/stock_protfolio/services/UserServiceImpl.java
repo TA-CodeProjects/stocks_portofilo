@@ -20,7 +20,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserStockRepository userStockRepository;
-    private final TransactionHistoryRepository userStockHistoryRepository;
+    private final TransactionHistoryRepository transactionHistoryRepository;
     private User user;
 
     @Override
@@ -34,38 +34,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void makeTransaction(String stockName, int amount, double price, TransactionType transactionType, String date) throws SystemException {
+    public UserStock makeTransaction(String stockName, int amount, double price, TransactionType transactionType, String date) throws SystemException {
         UserStock userStock = userStockRepository.findByUserAndStockName(user, stockName);
         if (userStock != null) {
-            if (transactionType.equals(TransactionType.BUY)){
+            if (transactionType.equals(TransactionType.BUY)) {
                 userStock.setAmount(userStock.getAmount() + amount);
             } else {
-                if (userStock.getAmount() < amount){
+                if (userStock.getAmount() < amount) {
                     throw new SystemException(ErrorMessage.NOT_ENOUGH_STOCKS_TO_SELL);
                 }
                 userStock.setAmount(userStock.getAmount() - amount);
             }
-        } else {
-            userStock = UserStock.builder().user(user).stockName(stockName).amount(amount).build();
+            TransactionHistory userStockHistory = TransactionHistory.builder().userStock(userStock).transactionType(transactionType).date(LocalDate.parse(date)).amount(amount).price(price).build();
+            transactionHistoryRepository.save(userStockHistory);
+            return userStockRepository.save(userStock);
         }
-        userStockRepository.save(userStock);
+        userStock = UserStock.builder().user(user).stockName(stockName).amount(amount).build();
         TransactionHistory userStockHistory = TransactionHistory.builder().userStock(userStock).transactionType(transactionType).date(LocalDate.parse(date)).amount(amount).price(price).build();
-        userStockHistoryRepository.save(userStockHistory);
-
+        userStock.setUserStockHistoryList(List.of(userStockHistory));
+        return userStockRepository.save(userStock);
     }
 
     @Override
-    public List<UserStock> getAllStocks(){
-       return userStockRepository.findByUser(user);
+    public List<TransactionHistory> getTransactionHistory(long userStockId) {
+        return transactionHistoryRepository.findByUserStockId(userStockId);
+    }
+
+    @Override
+    public List<UserStock> getAllStocks() {
+        return userStockRepository.findByUser(user);
     }
 
     @Override
     public UserStock getOneStock(long id) throws SystemException {
-       return userStockRepository.findById(id).orElseThrow(() -> new SystemException(ErrorMessage.ID_NOT_EXISTS));
+        return userStockRepository.findById(id).orElseThrow(() -> new SystemException(ErrorMessage.ID_NOT_EXISTS));
 
     }
-
-
 
 
 }

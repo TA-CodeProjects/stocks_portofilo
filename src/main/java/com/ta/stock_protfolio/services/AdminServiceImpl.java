@@ -1,9 +1,11 @@
 package com.ta.stock_protfolio.services;
 
-import com.sun.xml.bind.v2.TODO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ta.stock_protfolio.beans.Stock;
 import com.ta.stock_protfolio.beans.User;
 import com.ta.stock_protfolio.exceptions.ErrorMessage;
 import com.ta.stock_protfolio.exceptions.SystemException;
+import com.ta.stock_protfolio.repos.StockRepository;
 import com.ta.stock_protfolio.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService{
     private final UserRepository userRepository;
+    private final StockRepository stockRepository;
+
+    @Override
+    public Stock addStock(Stock stock) throws SystemException, JsonProcessingException {
+        if (stockRepository.existsByStockName(stock.getStockName())){
+            throw new SystemException(ErrorMessage.STOCK_EXISTS);
+        }
+        return stockRepository.save(stock);
+    }
+
+    @Override
+    public void deleteStock(long stockId) throws SystemException {
+        if (!userRepository.existsById(stockId)) {
+            throw new SystemException(ErrorMessage.STOCK_NOT_EXISTS);
+        }
+        stockRepository.deleteById(stockId);
+    }
+
+    @Override
+    public List<Stock> getAllStocks() {
+        return stockRepository.findAll();
+    }
 
     @Override
     public User addUser(User user) throws SystemException {
@@ -24,9 +48,10 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public void updateUser(User user) throws SystemException {
-        // TODO - add validation
-        userRepository.saveAndFlush(user);
+    public User updateUser(User user) throws SystemException {
+        User userToUpdate = userRepository.findById(user.getId()).orElseThrow(() -> new SystemException(ErrorMessage.ID_NOT_EXISTS));
+        user.setStocks(userToUpdate.getStocks());
+        return userRepository.saveAndFlush(user);
     }
 
     @Override

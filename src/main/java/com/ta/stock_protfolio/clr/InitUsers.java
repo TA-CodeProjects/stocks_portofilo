@@ -58,6 +58,7 @@ public class InitUsers implements CommandLineRunner {
 
         adminService.getAllUsers().forEach(System.out::println);
 
+//        userService.getTransactionHistory(1).forEach(System.out::println);
 
 
 

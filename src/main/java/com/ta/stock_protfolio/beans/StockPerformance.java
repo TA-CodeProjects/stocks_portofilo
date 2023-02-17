@@ -19,9 +19,10 @@ import java.util.Map;
 public class StockPerformance {
     @Id
     private String stockName;
-    private Day days;
-    private Day days7;
-    private Day days30;
-    private Day days90;
+    private Day day0;
+    private Day day1;
+    private Day day5;
+    private Day day22;
+    private Day day66;
 
 }

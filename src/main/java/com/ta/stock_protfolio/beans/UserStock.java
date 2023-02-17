@@ -23,7 +23,5 @@ public class UserStock {
     private int amount;
     private String stockName;
     @OneToMany(mappedBy = "userStock", cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
-    @ToString.Exclude
-    @JsonIgnore
     private List<TransactionHistory> userStockHistoryList;
 }

@@ -14,7 +14,9 @@ public interface UserService {
 
     User findByEmail(String email) throws SystemException;
 
-    void makeTransaction(String stockName, int amount, double price, TransactionType transactionType, String date) throws SystemException;
+    UserStock makeTransaction(String stockName, int amount, double price, TransactionType transactionType, String date) throws SystemException;
+
+    List<TransactionHistory> getTransactionHistory(long userStockId);
 
     List<UserStock> getAllStocks();
 
