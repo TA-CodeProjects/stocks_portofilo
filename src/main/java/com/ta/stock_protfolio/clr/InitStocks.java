@@ -34,7 +34,7 @@ public class InitStocks implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        List<String> stocks = List.of("AAPL","MSFT","GOOG","AMZN","WMT","TSLA","BABA");
+        List<String> stocks = List.of("AAPL","MSFT","GOOG","AMZN","WMT","TSLA","BABA", "COST", "CSCO", "TMUS", "ADBE", "NFLX", "INTC", "PYPL");
 
         stocks.forEach(stock -> stockRepository.save(new Stock(stock)));
 
