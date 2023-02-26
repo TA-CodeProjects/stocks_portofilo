@@ -22,4 +22,6 @@ public interface UserService {
 
     UserStock getOneStock(long id) throws SystemException;
 
+    void registerNewUserAccount(User user) throws SystemException;
+
 }

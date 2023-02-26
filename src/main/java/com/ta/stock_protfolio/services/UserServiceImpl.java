@@ -71,5 +71,11 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
+    @Override
+    public void registerNewUserAccount(User user) throws SystemException {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new SystemException(ErrorMessage.EMAIL_ALREADY_EXISTS);
+        }
+        userRepository.save(user);
+    }
 }

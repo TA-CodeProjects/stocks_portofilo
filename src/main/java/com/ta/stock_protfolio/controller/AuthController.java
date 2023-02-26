@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +44,12 @@ public class AuthController {
         map.put("jwt_token", jwt);
         map.put("username", loginParams.getEmail());
         return map;
+    }
+
+    @PostMapping("register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void registerUserAccount(@RequestBody @Valid User user) throws SystemException {
+        userService.registerNewUserAccount(user);
     }
 
 }

@@ -17,20 +17,21 @@ import java.util.List;
 public class AdminServiceImpl implements AdminService{
     private final UserRepository userRepository;
     private final StockRepository stockRepository;
+    private final StockService stockService;
 
     @Override
     public Stock addStock(Stock stock) throws SystemException, JsonProcessingException {
         if (stockRepository.existsByStockName(stock.getStockName())){
             throw new SystemException(ErrorMessage.STOCK_EXISTS);
         }
+        stockService.getStockDataFromApi(stock.getStockName());
         return stockRepository.save(stock);
     }
 
     @Override
     public void deleteStock(long stockId) throws SystemException {
-        if (!userRepository.existsById(stockId)) {
-            throw new SystemException(ErrorMessage.STOCK_NOT_EXISTS);
-        }
+        Stock stock = stockRepository.findById(stockId).orElseThrow(() -> new SystemException(ErrorMessage.STOCK_NOT_EXISTS));
+        stockService.deleteStockData(stock.getStockName());
         stockRepository.deleteById(stockId);
     }
 
