@@ -26,21 +26,21 @@ public class InitStocks implements CommandLineRunner {
 
         stocks.forEach(stock -> stockRepository.save(new Stock(stock)));
 
-        System.out.println("Data creation started...");
-
-        List<Stock> stockList = stockRepository.findAll();
-
-        int count = 1;
-        for (Stock stock:stockList) {
-           stockService.getStockDataFromApi(stock.getStockName());
-            if (count++%2 == 0){
-                TimeUnit.MINUTES.sleep(1);
-            }
-        }
-
-
-
-        System.out.println("Data creation complete...");
+//        System.out.println("Data creation started...");
+//
+//        List<Stock> stockList = stockRepository.findAll();
+//
+//        int count = 1;
+//        for (Stock stock:stockList) {
+//           stockService.getStockDataFromApi(stock.getStockName());
+//            if (count++%2 == 0){
+//                TimeUnit.MINUTES.sleep(1);
+//            }
+//        }
+//
+//
+//
+//        System.out.println("Data creation complete...");
 
     }
 }
